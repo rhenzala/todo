@@ -8,12 +8,56 @@
 <body>
     <header>
         <nav>
-            <button  class="nav-buttons" id="todo">TO-DO</button>
-            <button class="nav-buttons" id="project">PROJECT</button>
+            <button  class="nav-buttons" id="todo">To-Do</button>
+            <button class="nav-buttons" id="project">Project</button>
         </nav>
     </header>
-    <main>
-
+    <main id="container">
+        <div id="content">
+            <ul id="taskLists"></ul>
+        </div>
     </main>
+    <!-- MODAL FOR ADDING NEW TO-DO -->
+    <dialog id="addTodoModal" class="add-modal">
+        <form>
+            <h1>Add To-Do</h1>
+            <label for="taskName"> Name of Task:
+                <input type="text" id="taskName" minlength="1" required>
+            </label>
+            <label for="description"> Description:
+                <input type="text" id="description" minlength="1" required>
+            </label>
+            <label for="dueDate"> Due Date:
+                <input type="date" id="dueDate" required>
+            </label>
+            <label for="priority"> Priority
+                <select id="priority" required>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </label>
+            <div>
+                <button id="cancel" formmethod="dialog" value="cancel">Cancel</button>
+                <button id="confirm" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
+    <!-- MODAL FOR ADDING NEW PROJECT -->
+    <dialog id="addProjectModal" class="add-modal">
+        <form>
+            <h1>Add To-Do</h1>
+            <label for="projectName"> Project Name:
+                <input type="text" id="projectName" minlength="1" required>
+            </label>
+            <label for="description"> Description:
+                <input type="text" id="description" minlength="1" required>
+            </label>
+            <div>
+                <button id="cancel" formmethod="dialog" value="cancel">Cancel</button>
+                <button id="confirm" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 </html>
