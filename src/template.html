@@ -13,13 +13,16 @@
         </nav>
     </header>
     <main id="container">
+        <div id="pageName">To-Dos</div>
+        <button id="addBtn">Add Task</button>
         <div id="content">
+            
             <ul id="taskLists"></ul>
         </div>
     </main>
     <!-- MODAL FOR ADDING NEW TO-DO -->
     <dialog id="addTodoModal" class="add-modal">
-        <form>
+        <form id="todoForm">
             <h1>Add To-Do</h1>
             <label for="taskName"> Name of Task:
                 <input type="text" id="taskName" minlength="1" required>
@@ -32,20 +35,20 @@
             </label>
             <label for="priority"> Priority
                 <select id="priority" required>
-                    <option value="high">High</option>
+                    <option value="high" selected>High</option>
                     <option value="medium">Medium</option>
                     <option value="low">Low</option>
                 </select>
             </label>
             <div>
                 <button id="cancel" formmethod="dialog" value="cancel">Cancel</button>
-                <button id="confirm" value="default">Confirm</button>
+                <button type="submit" id="confirmTask" value="default">Confirm</button>
             </div>
         </form>
     </dialog>
     <!-- MODAL FOR ADDING NEW PROJECT -->
     <dialog id="addProjectModal" class="add-modal">
-        <form>
+        <form id="projectForm">
             <h1>Add To-Do</h1>
             <label for="projectName"> Project Name:
                 <input type="text" id="projectName" minlength="1" required>
@@ -55,7 +58,7 @@
             </label>
             <div>
                 <button id="cancel" formmethod="dialog" value="cancel">Cancel</button>
-                <button id="confirm" value="default">Confirm</button>
+                <button type="submit" id="confirmProject" value="default">Confirm</button>
             </div>
         </form>
     </dialog>
