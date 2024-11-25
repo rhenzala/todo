@@ -1,28 +1,53 @@
+import { createTodoPage } from "./todo.js";
+let currentContext = "General"
 
-export const addTodoButton = (container) =>{
-    const addToDoBtn = document.createElement('button');
-    addToDoBtn.classList.add('add-button', 'add-todo-button');
-    addToDoBtn.textContent = "Add To-Do";
-    container.appendChild(addToDoBtn);
+ export const updatePageName = (name) =>{
+    const pageName = document.getElementById('pageName');
+    pageName.textContent = name;
 }
-export const addProjectButton = (container) =>{
-    const addProjectBtn = document.createElement('button');
-    addProjectBtn.classList.add('add-button', 'add-project-button');
+const content = document.getElementById('content');
+export const handleBtnClick = (event) => {
+    const buttonId = event.target.id; 
+    content.replaceChildren();
+    if (buttonId === "todo") {
+        createTodoPage();
+        updatePageName("To-Dos")
+    } else if (buttonId === "project") {
+        addProjectButton();
+        updatePageName("Projects")
+        /**
+        const addProjectBtn = document.getElementById('addBtn');
+        addProjectBtn.addEventListener('click', ()=>{
+            showProjectModal();
+            //console.log("here")
+        })
+         */
+        
+    } 
+}
+export const addTodoButton = () =>{
+    const addToDoBtn = document.getElementById('addBtn');
+    addToDoBtn.textContent = "Add Task";
+}
+export const addProjectButton = () =>{
+    const addProjectBtn = document.getElementById('addBtn');
     addProjectBtn.textContent = "Add Project";
-    container.appendChild(addProjectBtn);
 }
 
-export const showTodoModal = ()=>{
-    const addTodoBtn = document.querySelector('.add-todo-button');
+export const TodoModal = (()=>{
     const addTodoModal = document.getElementById('addTodoModal')
-    addTodoBtn.addEventListener('click', ()=>{
+    const showTodoModal = () =>{
         addTodoModal.showModal();
-    })
-}
+    }
+    const closeTodoModal = () =>{
+        addTodoModal.close();
+    }
+    return{
+        showTodoModal,
+        closeTodoModal,
+    }
+})();
 export const showProjectModal = ()=>{
-    const addProjectBtn = document.querySelector('.add-project-button');
     const addProjectModal = document.getElementById('addProjectModal')
-    addProjectBtn.addEventListener('click', ()=>{
-        addProjectModal.showModal();
-    })
+    addProjectModal.showModal();
 }
