@@ -45,14 +45,14 @@ button:hover{
 dialog{
     background-color: var(--white);
     width: min(75%, 400px);
-    height: 500px;
+    max-height: 500px;
     border: 1px solid var(--accent);
     border-radius: none;
     outline: none;
     box-shadow: 1px 1px 3px var(--accent);
     margin: 0 auto;
     position: fixed;
-    top: 20%;
+    top: 10%;
     left: 0;
     right: 0;
 }
@@ -106,4 +106,19 @@ form div{
     align-items: center;
     gap: 12px;
     position: relative;
+}
+.cancel-button{
+    background-color: var(--red);
+}
+.invalid {
+    border: 2px solid var(--red) !important;
+}
+.error-message {
+    color: var(--red);
+    font-size: 0.8em;
+    display: block;
+    margin-top: 5px;
+}
+input:required, select:required {
+    border-left: 3px solid var(--accent); 
 }
