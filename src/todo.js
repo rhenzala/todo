@@ -1,21 +1,6 @@
-import { CreateAddButton, TodoModal } from "./dom_manipulation.js";
-
-
-export const createTodoPage = () => {
-    CreateAddButton.clearBtnContainer();
-    CreateAddButton.todo();
-    StorageHandler.loadTask();
-    TodoCard.displayCard();
-    const addTodoBtn = document.getElementById('addTodoBtn');
-    addTodoBtn.addEventListener('click', ()=>{
-        TodoModal.showTodoModal();
-        //console.log("here")
-    })
-}
-
 let myTasks = [];
 
-class Task {
+export class Task {
     constructor(taskNameInput, descriptionInput, dateInput, assignedProject, priorityInput){
         this.taskName = taskNameInput;
         this.description = descriptionInput;
@@ -29,75 +14,7 @@ class Task {
     }
 }
 
-const FormHandler = (() => {
-    const form = document.getElementById('todoForm');
-    const confirmBtn = document.getElementById('confirmTask');
-    const submitForm = () => {
-        const taskName = document.getElementById('taskName');
-        const description = document.getElementById('description');
-        const dueDate = document.getElementById('dueDate');
-        const priority = document.getElementById('priority');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const inputs = todoForm.querySelectorAll('input[required], select[required]');
-            let isValid = true;
-
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    isValid = false;
-                    input.classList.add('invalid');
-                    let errorMsg = input.parentElement.querySelector('.error-message');
-                    if (!errorMsg) {
-                        errorMsg = document.createElement('span');
-                        errorMsg.className = 'error-message';
-                        input.parentElement.appendChild(errorMsg);
-                    }
-                    errorMsg.textContent = `Please enter ${input.id}`;
-                } else {
-                    input.classList.remove('invalid');
-                    const errorMsg = input.parentElement.querySelector('.error-message');
-                    if (errorMsg) errorMsg.remove();
-                }
-            });
-            if (isValid) {
-                const taskNameInput = taskName.value;
-                const descInput = description.value;
-                const dateInput = dueDate.value;
-                const assignedProj = 'General';
-                const priorityInput = priority.value;
-                const newTask = new Task(taskNameInput, descInput, dateInput, assignedProj, priorityInput);
-                newTask.addTask();
-
-                TodoModal.closeTodoModal();
-                TodoCard.displayCard();
-                _clearForm();
-            }
-        });
-        form.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('invalid');
-                const errorMsg = this.parentElement.querySelector('.error-message');
-                if (errorMsg) errorMsg.remove();
-            });
-        });
-    };
-    const cancelInput = () => {
-        const cancelBtn = document.getElementById('cancelTask');
-        cancelBtn.addEventListener('click', ()=>{
-            TodoModal.closeTodoModal();
-            _clearForm();
-        })
-    }
-    const _clearForm = () => {
-        form.reset();
-    }
-    return{
-        submitForm,
-        cancelInput,
-    };
-})();
-
-const TodoCard = (()=>{
+export const TodoCard = (()=>{
     const content = document.getElementById('content');
     const _createCard = (task, index) => {
         const card = document.createElement('div');
@@ -116,7 +33,12 @@ const TodoCard = (()=>{
         editBtn.textContent = "EDIT";
         editBtn.classList.add('edit-button');
         deleteBtn.textContent = "DELETE";
-        deleteBtn.classList.add('delete-button')
+        deleteBtn.classList.add('delete-button');
+        deleteBtn.addEventListener('click', () => {
+            myTasks.splice(index, 1);
+            StorageHandler.saveTask(); // Save after deletion
+            displayCard(); // Refresh display
+        });
         card.appendChild(taskName);
         card.appendChild(dueDate);
         card.appendChild(description);
@@ -136,7 +58,7 @@ const TodoCard = (()=>{
     }
 })();
 
-const StorageHandler = (()=>{
+export const StorageHandler = (()=>{
     const saveTask = () =>{
         try {
             localStorage.setItem('myTasks', JSON.stringify(myTasks));
@@ -176,6 +98,3 @@ const StorageHandler = (()=>{
         loadTask,
     };
 })();
-
-FormHandler.submitForm();
-FormHandler.cancelInput();
