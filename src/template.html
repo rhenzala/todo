@@ -14,7 +14,7 @@
     </header>
     <main id="container">
         <div id="pageName">To-Dos</div>
-        <button id="addBtn">Add Task</button>
+        <div class="button-container" id="buttonContainer"></div>
         <div id="content">
             
             <ul id="taskLists"></ul>
@@ -22,7 +22,7 @@
     </main>
     <!-- MODAL FOR ADDING NEW TO-DO -->
     <dialog id="addTodoModal" class="add-modal">
-        <form id="todoForm">
+        <form id="todoForm" novalidate>
             <h1>Add To-Do</h1>
             <label for="taskName"> Name of Task:
                 <input type="text" id="taskName" minlength="1" required>
@@ -41,23 +41,23 @@
                 </select>
             </label>
             <div>
-                <button id="cancel" formmethod="dialog" value="cancel">Cancel</button>
+                <button id="cancelTask" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
                 <button type="submit" id="confirmTask" value="default">Confirm</button>
             </div>
         </form>
     </dialog>
     <!-- MODAL FOR ADDING NEW PROJECT -->
     <dialog id="addProjectModal" class="add-modal">
-        <form id="projectForm">
-            <h1>Add To-Do</h1>
+        <form id="projectForm" novalidate>
+            <h1>Add Project</h1>
             <label for="projectName"> Project Name:
                 <input type="text" id="projectName" minlength="1" required>
             </label>
-            <label for="description"> Description:
-                <input type="text" id="description" minlength="1" required>
+            <label for="projectDesc"> Description:
+                <input type="text" id="projectDesc" minlength="1" required>
             </label>
             <div>
-                <button id="cancel" formmethod="dialog" value="cancel">Cancel</button>
+                <button id="cancelProject" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
                 <button type="submit" id="confirmProject" value="default">Confirm</button>
             </div>
         </form>
