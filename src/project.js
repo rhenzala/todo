@@ -1,20 +1,6 @@
-import { CreateAddButton, ProjectModal  } from "./dom_manipulation";
-
-export const createProjectPage = () =>{
-    CreateAddButton.clearBtnContainer();
-    CreateAddButton.project();
-    ProjectStorageHandler.loadProject();
-    ProjectCard.displayCard();
-    const addProjBtn = document.getElementById('addProjectBtn');
-    addProjBtn.addEventListener('click', ()=>{
-        ProjectModal.showProjectModal();
-        //console.log("here")
-    })
-}
-
 let myProjects = [];
 
-class Project {
+export class Project {
     constructor(projectNameInput, projDescInput, numOfTasks){
         this.projectName = projectNameInput;
         this.projectDescription = projDescInput;
@@ -26,44 +12,7 @@ class Project {
     }
 }
 
-const FormHandler = (() => {
-    const submitInput = () => {
-        const projectName = document.getElementById('projectName');
-        const projectDesc = document.getElementById('projectDesc');
-        const confirmBtn = document.getElementById('confirmProject');
-
-        confirmBtn.addEventListener('click', (event)=>{
-            event.preventDefault();
-            const projectNameInput = projectName.value;
-            const projectDescInput = projectDesc.value;
-            const numOfTasks = 1;
-            const newProject = new Project(projectNameInput, projectDescInput, numOfTasks);
-            newProject.addProject();
-            console.log(myProjects);
-
-            ProjectModal.closeProjectModal();
-            ProjectCard.displayCard();
-            _clearForm();
-        })
-    }
-    const cancelInput = () =>{
-        const cancelBtn = document.getElementById('cancelProject');
-        cancelBtn.addEventListener('click', ()=>{
-            ProjectModal.closeProjectModal();
-            _clearForm();
-        })
-    }
-    const _clearForm = () =>{
-        const form = document.getElementById('projectForm');
-        form.reset();
-    }
-    return{
-        submitInput,
-        cancelInput,
-    }
-})();
-
-const ProjectCard = (()=>{
+export const ProjectCard = (()=>{
     const content = document.getElementById('content');
     const _createCard = (project, index) => {
         const card = document.createElement('div');
@@ -81,6 +30,11 @@ const ProjectCard = (()=>{
         showBtn.classList.add('show-button');
         deleteBtn.textContent = "DELETE";
         deleteBtn.classList.add('delete-button');
+        deleteBtn.addEventListener('click', () => {
+            myProjects.splice(index, 1);
+            ProjectStorageHandler.saveProject(); 
+            displayCard(); 
+        });
         card.appendChild(projectName);
         card.appendChild(projectDesc);
         card.appendChild(numOfTasks);
@@ -99,7 +53,7 @@ const ProjectCard = (()=>{
     }
 })();
 
-const ProjectStorageHandler = (()=>{
+export const ProjectStorageHandler = (()=>{
     const saveProject = () =>{
         try {
             localStorage.setItem('myProjects', JSON.stringify(myProjects));
@@ -112,10 +66,8 @@ const ProjectStorageHandler = (()=>{
         try {
             const savedProjects = localStorage.getItem('myProjects');
             if (savedProjects) {
-                // Parse saved tasks and recreate Task objects
                 const projectsData = JSON.parse(savedProjects);
-                myProjects = []; // Clear existing tasks
-                
+                myProjects = []; 
                 projectsData.forEach(projectData => {
                     const proj = new Project(
                         projectData.projectName,
@@ -137,6 +89,3 @@ const ProjectStorageHandler = (()=>{
         loadProject,
     };
 })();
-
-FormHandler.submitInput();
-FormHandler.cancelInput();
