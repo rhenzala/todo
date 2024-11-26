@@ -1,7 +1,5 @@
 import "./styles.css";
-import { handleBtnClick } from "./dom_manipulation.js";
-import { createTodoPage } from "./todo.js"
-
+import { createTodoPage, handleBtnClick } from "./dom_manipulation.js";
 
 const buttons = document.querySelectorAll('.nav-buttons');
 buttons.forEach(btn =>{
