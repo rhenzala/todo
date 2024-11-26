@@ -1,9 +1,12 @@
-import { addTodoButton, TodoModal } from "./dom_manipulation.js";
+import { CreateAddButton, TodoModal } from "./dom_manipulation.js";
 
 
 export const createTodoPage = () => {
-    addTodoButton();
-    const addTodoBtn = document.getElementById('addBtn');
+    CreateAddButton.clearBtnContainer();
+    CreateAddButton.todo();
+    StorageHandler.loadTask();
+    TodoCard.displayCard();
+    const addTodoBtn = document.getElementById('addTodoBtn');
     addTodoBtn.addEventListener('click', ()=>{
         TodoModal.showTodoModal();
         //console.log("here")
@@ -22,54 +25,81 @@ class Task {
     }
     addTask(){
         myTasks.push(this);
+        StorageHandler.saveTask();
     }
 }
 
 const FormHandler = (() => {
-    const submitInput = () => {
+    const form = document.getElementById('todoForm');
+    const confirmBtn = document.getElementById('confirmTask');
+    const submitForm = () => {
         const taskName = document.getElementById('taskName');
         const description = document.getElementById('description');
         const dueDate = document.getElementById('dueDate');
         const priority = document.getElementById('priority');
-        const confirmBtn = document.getElementById('confirmTask');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const inputs = todoForm.querySelectorAll('input[required], select[required]');
+            let isValid = true;
 
-        confirmBtn.addEventListener('click', (event)=>{
-            event.preventDefault();
-            const taskNameInput = taskName.value;
-            const descInput = description.value;
-            const dateInput = dueDate.value;
-            const assignedProj = 'General';
-            const priorityInput = priority.value;
-            const newTask = new Task(taskNameInput, descInput, dateInput, assignedProj, priorityInput);
-            newTask.addTask();
-            console.log(myTasks);
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('invalid');
+                    let errorMsg = input.parentElement.querySelector('.error-message');
+                    if (!errorMsg) {
+                        errorMsg = document.createElement('span');
+                        errorMsg.className = 'error-message';
+                        input.parentElement.appendChild(errorMsg);
+                    }
+                    errorMsg.textContent = `Please enter ${input.id}`;
+                } else {
+                    input.classList.remove('invalid');
+                    const errorMsg = input.parentElement.querySelector('.error-message');
+                    if (errorMsg) errorMsg.remove();
+                }
+            });
+            if (isValid) {
+                const taskNameInput = taskName.value;
+                const descInput = description.value;
+                const dateInput = dueDate.value;
+                const assignedProj = 'General';
+                const priorityInput = priority.value;
+                const newTask = new Task(taskNameInput, descInput, dateInput, assignedProj, priorityInput);
+                newTask.addTask();
 
-            TodoModal.closeTodoModal();
-            TodoCard.displayTodoCards();
-            _clearForm();
-            
-        })
-    }
-    const cancelInput = () =>{
-        const cancelBtn = document.getElementById('cancel');
+                TodoModal.closeTodoModal();
+                TodoCard.displayCard();
+                _clearForm();
+            }
+        });
+        form.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('invalid');
+                const errorMsg = this.parentElement.querySelector('.error-message');
+                if (errorMsg) errorMsg.remove();
+            });
+        });
+    };
+    const cancelInput = () => {
+        const cancelBtn = document.getElementById('cancelTask');
         cancelBtn.addEventListener('click', ()=>{
             TodoModal.closeTodoModal();
             _clearForm();
         })
     }
-    const _clearForm = () =>{
-        const form = document.getElementById('todoForm');
+    const _clearForm = () => {
         form.reset();
     }
     return{
-        submitInput,
+        submitForm,
         cancelInput,
-    }
+    };
 })();
 
 const TodoCard = (()=>{
     const content = document.getElementById('content');
-    const _createTodoCards = (task, index) => {
+    const _createCard = (task, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
         card.setAttribute('data-id', index);
@@ -84,7 +114,9 @@ const TodoCard = (()=>{
         description.textContent = `${task.description}`;
         assignedProject.textContent = `${task.assignedProject}`
         editBtn.textContent = "EDIT";
+        editBtn.classList.add('edit-button');
         deleteBtn.textContent = "DELETE";
+        deleteBtn.classList.add('delete-button')
         card.appendChild(taskName);
         card.appendChild(dueDate);
         card.appendChild(description);
@@ -93,16 +125,57 @@ const TodoCard = (()=>{
         card.appendChild(deleteBtn);
         content.appendChild(card);
     }
-    const displayTodoCards = () => {
+    const displayCard = () => {
         content.replaceChildren();
         myTasks.forEach((task, index) =>{
-            _createTodoCards(task, index);
+            _createCard(task, index);
         })
     }
     return{
-        displayTodoCards,
+        displayCard,
     }
 })();
 
-FormHandler.submitInput();
+const StorageHandler = (()=>{
+    const saveTask = () =>{
+        try {
+            localStorage.setItem('myTasks', JSON.stringify(myTasks));
+            console.log('Tasks saved successfully');
+        } catch (error) {
+            console.error('Error saving tasks:', error);
+        }
+    }
+    const loadTask = () => {
+        try {
+            const savedTasks = localStorage.getItem('myTasks');
+            if (savedTasks) {
+                // Parse saved tasks and recreate Task objects
+                const tasksData = JSON.parse(savedTasks);
+                myTasks = []; // Clear existing tasks
+                
+                tasksData.forEach(taskData => {
+                    const task = new Task(
+                        taskData.taskName,
+                        taskData.description,
+                        taskData.dueDate,
+                        taskData.assignedProject,
+                        taskData.priority
+                    );
+                    myTasks.push(task);
+                });
+                
+                console.log('Tasks loaded successfully');
+            }
+        } catch (error) {
+            console.error('Error loading tasks:', error);
+        }
+    };
+
+    return {
+        saveTask,
+        loadTask,
+    };
+})();
+
+FormHandler.submitForm();
 FormHandler.cancelInput();
