@@ -1,8 +1,25 @@
 import { Task, TodoCard, StorageHandler } from "./todo.js";
-import { Project, ProjectCard, ProjectStorageHandler } from "./project.js";
+import { myProjects, Project, ProjectCard, ProjectStorageHandler } from "./project.js";
+import {  HandleSingleProject, SingleProjectStorageHandler, SingleProjectCard } from "./each_project.js";
 
-let currentContext = "General"
+
 const content = document.getElementById('content');
+let currentContext = "General";
+let numOfTasks = 0;
+
+const _handleCardClick = (e) => {
+    const cardElement = e.target.closest('.project-card');
+    if (cardElement && !e.target.classList.contains('edit-button') && 
+        !e.target.classList.contains('delete-button')) {
+        const projectIndex = parseInt(e.target.closest('.project-card').getAttribute('data-id'));
+        [currentContext, numOfTasks] = HandleSingleProject.getProjectDetails(projectIndex, currentContext);
+        myProjects[projectIndex].setTaskCount(numOfTasks);
+        console.log(numOfTasks)
+        createSingleProjectPage(currentContext);
+        updatePageName(currentContext);
+    }
+}
+content.addEventListener('click', _handleCardClick);
 
 export const createTodoPage = () => {
     CreateAddButton.clearBtnContainer();
@@ -23,11 +40,20 @@ const createProjectPage = () =>{
     const addProjBtn = document.getElementById('addProjectBtn');
     addProjBtn.addEventListener('click', ()=>{
         ProjectModal.showProjectModal();
-        //console.log("here")
+    })
+}
+export const createSingleProjectPage = (projName) =>{
+    CreateAddButton.clearBtnContainer();
+    CreateAddButton.todo();
+    SingleProjectStorageHandler.loadTask();
+    SingleProjectCard.displayCard(projName);
+    const addTodoBtn = document.getElementById('addTodoBtn');
+    addTodoBtn.addEventListener('click', ()=>{
+        TodoModal.showTodoModal();
     })
 }
 
- const updatePageName = (name) =>{
+ export const updatePageName = (name) =>{
     const pageName = document.getElementById('pageName');
     pageName.textContent = name;
 }
@@ -43,6 +69,7 @@ export const handleBtnClick = (event) => {
         updatePageName("Projects") 
     } 
 }
+
 const CreateAddButton = (()=>{
     const buttonContainer = document.getElementById('buttonContainer');
     const todo = () =>{
@@ -178,7 +205,7 @@ const taskSubmitHandler = () => {
     const dueDate = document.getElementById('dueDate').value;
     const priority = document.getElementById('priority').value;
 
-    const newTask = new Task(taskName, description, dueDate, 'General', priority);
+    const newTask = new Task(taskName, description, dueDate, currentContext, priority);
     newTask.addTask();
 
     TodoModal.closeTodoModal();
@@ -188,7 +215,7 @@ const projectSubmitHandler = () => {
     const projectName = document.getElementById('projectName').value;
     const projectDesc = document.getElementById('projectDesc').value;
 
-    const newProject = new Project(projectName, projectDesc, 1);
+    const newProject = new Project(projectName, projectDesc, numOfTasks);
     newProject.addProject();
 
     ProjectModal.closeProjectModal();
