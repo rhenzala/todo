@@ -107,6 +107,18 @@ form div{
     gap: 12px;
     position: relative;
 }
+#highPriority{
+    border-left: 10px solid var(--red);
+    box-shadow: 1px 1px 3px var(--red);
+}
+#mediumPriority{
+    border-left: 10px solid var(--orange);
+    box-shadow: 1px 1px 3px var(--orange);
+}
+#lowPriority{
+    border-left: 10px solid var(--green);
+    box-shadow: 1px 1px 3px var(--green);
+}
 .cancel-button{
     background-color: var(--red);
 }
