@@ -1,4 +1,6 @@
-let myTasks = [];
+import { projectTasks, SingleProjectStorageHandler } from "./each_project";
+
+export let myTasks = [];
 
 export class Task {
     constructor(taskNameInput, descriptionInput, dateInput, assignedProject, priorityInput){
@@ -16,7 +18,7 @@ export class Task {
 
 export const TodoCard = (()=>{
     const content = document.getElementById('content');
-    const _createCard = (task, index) => {
+    const createCard = (task, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
         card.setAttribute('data-id', index);
@@ -34,11 +36,9 @@ export const TodoCard = (()=>{
         editBtn.classList.add('edit-button');
         deleteBtn.textContent = "DELETE";
         deleteBtn.classList.add('delete-button');
-        deleteBtn.addEventListener('click', () => {
-            myTasks.splice(index, 1);
-            StorageHandler.saveTask(); // Save after deletion
-            displayCard(); // Refresh display
-        });
+
+        _handlePriority(task.priority, card);
+        _handleDeleteBtn(deleteBtn, index);
         card.appendChild(taskName);
         card.appendChild(dueDate);
         card.appendChild(description);
@@ -47,14 +47,33 @@ export const TodoCard = (()=>{
         card.appendChild(deleteBtn);
         content.appendChild(card);
     }
+    const _handleDeleteBtn = (btn, index) => {
+        btn.addEventListener('click', () => {
+            myTasks.splice(index, 1);
+            projectTasks.splice(index, 1);
+            StorageHandler.saveTask(); 
+            SingleProjectStorageHandler.saveTask();
+            displayCard(); 
+        });
+    }
+    const _handlePriority = (priority, card) => {
+        if (priority === "high") {
+            card.id = "highPriority";
+        } else if (priority === "medium"){
+            card.id = "mediumPriority";
+        } else if (priority === "low"){
+            card.id = "lowPriority";
+        }
+    }
     const displayCard = () => {
         content.replaceChildren();
         myTasks.forEach((task, index) =>{
-            _createCard(task, index);
+            createCard(task, index);
         })
     }
     return{
         displayCard,
+        createCard
     }
 })();
 
@@ -71,9 +90,8 @@ export const StorageHandler = (()=>{
         try {
             const savedTasks = localStorage.getItem('myTasks');
             if (savedTasks) {
-                // Parse saved tasks and recreate Task objects
                 const tasksData = JSON.parse(savedTasks);
-                myTasks = []; // Clear existing tasks
+                myTasks = []; 
                 
                 tasksData.forEach(taskData => {
                     const task = new Task(
