@@ -1,9 +1,10 @@
-import { Task, TodoCard, StorageHandler } from "./todo.js";
+import { myTasks, Task, TodoCard, StorageHandler } from "./todo.js";
 import { myProjects, Project, ProjectCard, ProjectStorageHandler } from "./project.js";
 import {  HandleSingleProject, SingleProjectStorageHandler, SingleProjectCard } from "./each_project.js";
 
 
 const content = document.getElementById('content');
+const pageName = document.getElementById('pageName');
 let currentContext = "General";
 let numOfTasks = 0;
 
@@ -54,7 +55,6 @@ export const createSingleProjectPage = (projName) =>{
 }
 
  export const updatePageName = (name) =>{
-    const pageName = document.getElementById('pageName');
     pageName.textContent = name;
 }
 
@@ -98,28 +98,58 @@ const CreateAddButton = (()=>{
 
 export const TodoModal = (()=>{
     const addTodoModal = document.getElementById('addTodoModal');
+    const editTodoModal = document.getElementById('editTodoModal');
     const showTodoModal = () =>{
         addTodoModal.showModal();
     }
     const closeTodoModal = () =>{
         addTodoModal.close();
     }
+    const showEdit = (task) => {
+        const editTaskNameInput = document.getElementById('editTaskName');
+        const editTaskDescInput = document.getElementById('editTaskDesc');
+        const editDueDate = document.getElementById('editDueDate');
+        const editPriority = document.getElementById('editPriority');
+        editTaskNameInput.value = task.taskName;
+        editTaskDescInput.value = task.description;
+        editDueDate.value = task.dueDate;
+        editPriority.value = task.priority;
+        editTodoModal.showModal();
+    }
+    const closeEdit = () => {
+        editTodoModal.close();
+    }
     return{
         showTodoModal,
         closeTodoModal,
+        showEdit,
+        closeEdit
     }
 })();
 export const ProjectModal = (()=>{
     const addProjectModal = document.getElementById('addProjectModal');
-    const showProjectModal = ()=>{
+    const editProjectModal = document.getElementById('editProjectModal');
+    const showProjectModal = () => {
         addProjectModal.showModal();
     }
-    const closeProjectModal = () =>{
+    const closeProjectModal = () => {
         addProjectModal.close();
+    }
+    const showEdit = (project) => {
+        const editProjNameInput = document.getElementById('editProjectName');
+        const editProjDescInput = document.getElementById('editProjectDesc');
+        editProjNameInput.value = project.projectName;
+        editProjDescInput.value = project.projectDescription;
+        editProjectModal.showModal();
+    }
+    const closeEdit = () => {
+        editProjectModal.close();
     }
     return{
         showProjectModal,
         closeProjectModal,
+        showEdit,
+        closeEdit
     }
 })();
 
@@ -205,7 +235,8 @@ const taskSubmitHandler = () => {
     const dueDate = document.getElementById('dueDate').value;
     const priority = document.getElementById('priority').value;
 
-    const newTask = new Task(taskName, description, dueDate, currentContext, priority);
+    if (pageName === "To-Dos") currentContext = "General";
+    const newTask = new Task(taskName, description, dueDate, priority, currentContext);
     newTask.addTask();
 
     TodoModal.closeTodoModal();
@@ -221,6 +252,38 @@ const projectSubmitHandler = () => {
     ProjectModal.closeProjectModal();
     ProjectCard.displayCard();
 };
+const editProjectSubmitHandler = () => {
+    const projectIndex = parseInt(document.getElementById('editProjectForm').getAttribute('data-project-index'));
+    const newName = document.getElementById('editProjectName').value;
+    const newDesc = document.getElementById('editProjectDesc').value;
+
+    myProjects[projectIndex].updateDetails(newName, newDesc);
+    ProjectModal.closeEdit();
+    ProjectCard.displayCard();
+}
+const editTaskSubmitHandler = () => {
+    const taskIndex = parseInt(document.getElementById('editTodoForm').getAttribute('data-task-index'));
+    const newName = document.getElementById('editTaskName').value;
+    const newDesc = document.getElementById('editTaskDesc').value;
+    const newDueDate = document.getElementById('editDueDate').value;
+    const newPriority = document.getElementById('editPriority').value;
+
+    myTasks[taskIndex].updateDetails(newName, newDesc, newDueDate, newPriority);
+    TodoModal.closeEdit();
+    TodoCard.displayCard();
+}
+FormHandler.addForm({
+    formId: 'editTodoForm',
+    cancelBtnId: 'cancelTask',
+    submitHandler: editTaskSubmitHandler,
+    closeModalHandler: TodoModal.closeEdit
+});
+FormHandler.addForm({
+    formId: 'editProjectForm',
+    cancelBtnId: 'cancelTask',
+    submitHandler: editProjectSubmitHandler,
+    closeModalHandler: ProjectModal.closeEdit
+});
 
 FormHandler.addForm({
     formId: 'todoForm',

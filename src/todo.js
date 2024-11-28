@@ -1,17 +1,25 @@
 import { projectTasks, SingleProjectStorageHandler } from "./each_project";
+import { TodoModal } from "./dom_manipulation";
 
 export let myTasks = [];
 
 export class Task {
-    constructor(taskNameInput, descriptionInput, dateInput, assignedProject, priorityInput){
+    constructor(taskNameInput, descriptionInput, dateInput, priorityInput, assignedProject){
         this.taskName = taskNameInput;
         this.description = descriptionInput;
         this.dueDate = dateInput;
-        this.assignedProject = assignedProject;
         this.priority = priorityInput;
+        this.assignedProject = assignedProject;
     }
     addTask(){
         myTasks.push(this);
+        StorageHandler.saveTask();
+    }
+    updateDetails(newName, newDesc, newDueDate, newPriority) {
+        this.taskName = newName;
+        this.description = newDesc;
+        this.dueDate = newDueDate;
+        this.priority = newPriority;
         StorageHandler.saveTask();
     }
 }
@@ -38,6 +46,7 @@ export const TodoCard = (()=>{
         deleteBtn.classList.add('delete-button');
 
         _handlePriority(task.priority, card);
+        _handleEditBtn(editBtn, task, index)
         _handleDeleteBtn(deleteBtn, index);
         card.appendChild(taskName);
         card.appendChild(dueDate);
@@ -46,6 +55,13 @@ export const TodoCard = (()=>{
         card.appendChild(editBtn);
         card.appendChild(deleteBtn);
         content.appendChild(card);
+    }
+    const _handleEditBtn = (btn, task, index) => {
+        btn.addEventListener('click', () => {
+            TodoModal.showEdit(task);
+            const editForm = document.getElementById('editTodoForm');
+            editForm.setAttribute('data-task-index', index);
+        });
     }
     const _handleDeleteBtn = (btn, index) => {
         btn.addEventListener('click', () => {
@@ -98,8 +114,8 @@ export const StorageHandler = (()=>{
                         taskData.taskName,
                         taskData.description,
                         taskData.dueDate,
-                        taskData.assignedProject,
-                        taskData.priority
+                        taskData.priority,
+                        taskData.assignedProject
                     );
                     myTasks.push(task);
                 });

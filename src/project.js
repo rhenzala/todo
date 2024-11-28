@@ -1,3 +1,5 @@
+import { ProjectModal } from "./dom_manipulation";
+
 export let myProjects = [];
 
 export class Project {
@@ -22,6 +24,11 @@ export class Project {
             ProjectStorageHandler.saveProject();
         }
     }
+    updateDetails(newName, newDesc) {
+        this.projectName = newName;
+        this.projectDescription = newDesc;
+        ProjectStorageHandler.saveProject();
+    }
 }
 
 export const ProjectCard = (()=>{
@@ -44,6 +51,7 @@ export const ProjectCard = (()=>{
         deleteBtn.textContent = "DELETE";
         deleteBtn.classList.add('delete-button');
         
+        _handleEditBtn(editBtn, project, index);
         _handleDeleteBtn(deleteBtn, index);
         card.appendChild(projectName);
         card.appendChild(projectDesc);
@@ -51,6 +59,13 @@ export const ProjectCard = (()=>{
         card.appendChild(editBtn);
         card.appendChild(deleteBtn);
         content.appendChild(card);
+    }
+    const _handleEditBtn = (btn, project, index) => {
+        btn.addEventListener('click', () => {
+            ProjectModal.showEdit(project);
+            const editForm = document.getElementById('editProjectForm');
+            editForm.setAttribute('data-project-index', index);
+        });
     }
     const _handleDeleteBtn = (btn, index) => {
         btn.addEventListener('click', () => {

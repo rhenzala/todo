@@ -62,8 +62,8 @@ export const SingleProjectStorageHandler = (()=>{
                         taskData.taskName,
                         taskData.description,
                         taskData.dueDate,
-                        taskData.assignedProject,
-                        taskData.priority
+                        taskData.priority,
+                        taskData.assignedProject
                     );
                     projectTasks.push(task);
                 });
