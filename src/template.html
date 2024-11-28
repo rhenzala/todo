@@ -62,5 +62,47 @@
             </div>
         </form>
     </dialog>
+    <!-- MODAL FOR EDITING TODO CARD -->
+    <dialog id="editTodoModal" class="add-modal">
+        <form id="editTodoForm" novalidate>
+            <h1>Edit To-Do</h1>
+            <label for="editTaskName"> Name of Task:
+                <input type="text" id="editTaskName" minlength="1" required>
+            </label>
+            <label for="editTaskDesc"> Description:
+                <input type="text" id="editTaskDesc" minlength="1" required>
+            </label>
+            <label for="editDueDate"> Due Date:
+                <input type="date" id="editDueDate" required>
+            </label>
+            <label for="editPriority"> Priority
+                <select id="editPriority" required>
+                    <option value="high" selected>High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </label>
+            <div>
+                <button id="cancelTask" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="submit" id="confirmTaskEdit" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
+    <!-- MODAL FOR EDITING A PROJECT -->
+    <dialog id="editProjectModal" class="add-modal">
+        <form id="editProjectForm" novalidate>
+            <h1>Edit Project</h1>
+            <label for="editProjectName"> Project Name:
+                <input type="text" id="editProjectName" minlength="1" required>
+            </label>
+            <label for="editProjectDesc"> Description:
+                <input type="text" id="editProjectDesc" minlength="1" required>
+            </label>
+            <div>
+                <button id="cancelProject" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="submit" id="confirmProjectEdit" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 </html>
