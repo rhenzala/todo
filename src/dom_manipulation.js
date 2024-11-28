@@ -25,6 +25,7 @@ content.addEventListener('click', _handleCardClick);
 export const createTodoPage = () => {
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
+    updatePageName("To-Dos");
     StorageHandler.loadTask();
     TodoCard.displayCard();
     const addTodoBtn = document.getElementById('addTodoBtn');
@@ -36,6 +37,7 @@ export const createTodoPage = () => {
 const createProjectPage = () =>{
     CreateAddButton.clearBtnContainer();
     CreateAddButton.project();
+    updatePageName("Projects");
     ProjectStorageHandler.loadProject();
     ProjectCard.displayCard();
     const addProjBtn = document.getElementById('addProjectBtn');
@@ -46,6 +48,7 @@ const createProjectPage = () =>{
 export const createSingleProjectPage = (projName) =>{
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
+    updatePageName(projName);
     SingleProjectStorageHandler.loadTask();
     SingleProjectCard.displayCard(projName);
     const addTodoBtn = document.getElementById('addTodoBtn');
@@ -63,10 +66,8 @@ export const handleBtnClick = (event) => {
     content.replaceChildren();
     if (buttonId === "todo") {
         createTodoPage();
-        updatePageName("To-Dos")
     } else if (buttonId === "project") {
         createProjectPage();
-        updatePageName("Projects") 
     } 
 }
 
@@ -235,12 +236,17 @@ const taskSubmitHandler = () => {
     const dueDate = document.getElementById('dueDate').value;
     const priority = document.getElementById('priority').value;
 
-    if (pageName === "To-Dos") currentContext = "General";
-    const newTask = new Task(taskName, description, dueDate, priority, currentContext);
+    let context = pageName === "To-Dos" ? "General": HandleSingleProject.getCurrentProject();
+
+    const newTask = new Task(taskName, description, dueDate, priority, context);
     newTask.addTask();
 
     TodoModal.closeTodoModal();
-    TodoCard.displayCard();
+    if (context === "General"){
+        TodoCard.displayCard();
+    } else {
+        HandleSingleProject.refreshProjectTasks();
+    }
 };
 const projectSubmitHandler = () => {
     const projectName = document.getElementById('projectName').value;

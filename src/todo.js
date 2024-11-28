@@ -1,7 +1,8 @@
-import { projectTasks, SingleProjectStorageHandler } from "./each_project";
+import { HandleSingleProject, projectTasks, SingleProjectCard, SingleProjectStorageHandler } from "./each_project";
 import { TodoModal } from "./dom_manipulation";
 
 export let myTasks = [];
+const pageName = document.getElementById('pageName').textContent;
 
 export class Task {
     constructor(taskNameInput, descriptionInput, dateInput, priorityInput, assignedProject){
@@ -9,11 +10,16 @@ export class Task {
         this.description = descriptionInput;
         this.dueDate = dateInput;
         this.priority = priorityInput;
-        this.assignedProject = assignedProject;
+        this.assignedProject = assignedProject || "General"; // if the todo is created within To-Dos page, assignedProject is General
     }
     addTask(){
         myTasks.push(this);
         StorageHandler.saveTask();
+        if (pageName === "To-Dos"){
+            TodoCard.displayCard();
+        } else {
+            SingleProjectCard.displayCard(this.assignedProject);
+        }
     }
     updateDetails(newName, newDesc, newDueDate, newPriority) {
         this.taskName = newName;
@@ -21,12 +27,17 @@ export class Task {
         this.dueDate = newDueDate;
         this.priority = newPriority;
         StorageHandler.saveTask();
+        if (pageName === "To-Dos"){
+            TodoCard.displayCard();
+        } else {
+            SingleProjectCard.displayCard(this.assignedProject);
+        }
     }
 }
 
 export const TodoCard = (()=>{
     const content = document.getElementById('content');
-    const createCard = (task, index) => {
+    const _createCard = (task, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
         card.setAttribute('data-id', index);
@@ -39,7 +50,7 @@ export const TodoCard = (()=>{
         taskName.textContent = `${task.taskName}`;
         dueDate.textContent = `${task.dueDate}`;
         description.textContent = `${task.description}`;
-        assignedProject.textContent = `${task.assignedProject}`
+        assignedProject.textContent = `${task.assignedProject}`;
         editBtn.textContent = "EDIT";
         editBtn.classList.add('edit-button');
         deleteBtn.textContent = "DELETE";
@@ -84,12 +95,11 @@ export const TodoCard = (()=>{
     const displayCard = () => {
         content.replaceChildren();
         myTasks.forEach((task, index) =>{
-            createCard(task, index);
+            _createCard(task, index);
         })
     }
     return{
-        displayCard,
-        createCard
+        displayCard
     }
 })();
 
