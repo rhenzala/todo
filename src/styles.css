@@ -42,7 +42,7 @@ button{
     border: var(--blue) 1px solid;
     padding: 8px 12px;
 }
-button:hover{
+button:hover {
     cursor: pointer;
     border: var(--black) 1px solid;
 }
@@ -171,6 +171,7 @@ form div{
 }
 .cancel-button{
     background-color: var(--red);
+    border: var(--red) 1px solid;
 }
 .invalid {
     border: 2px solid var(--red) !important;
