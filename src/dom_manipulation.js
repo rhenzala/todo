@@ -1,6 +1,6 @@
 import { myTasks, Task, TodoCard, StorageHandler } from "./todo.js";
 import { myProjects, Project, ProjectCard, ProjectStorageHandler } from "./project.js";
-import {  HandleSingleProject, SingleProjectStorageHandler, SingleProjectCard } from "./each_project.js";
+import { HandleSingleProject, SingleProjectCard } from "./each_project.js";
 import AddIcon from "../assets/plus.svg";
 
 
@@ -26,7 +26,6 @@ content.addEventListener('click', _handleCardClick);
 export const createTodoPage = () => {
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
-    updatePageName("All Tasks");
     StorageHandler.loadTask();
     TodoCard.displayCard();
     const addTodoBtn = document.getElementById('addTodoBtn');
@@ -50,7 +49,7 @@ export const createSingleProjectPage = (projName) =>{
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
     updatePageName(projName);
-    SingleProjectStorageHandler.loadTask();
+    StorageHandler.loadTask();
     SingleProjectCard.displayCard(projName);
     const addTodoBtn = document.getElementById('addTodoBtn');
     addTodoBtn.addEventListener('click', ()=>{
@@ -66,6 +65,8 @@ export const handleBtnClick = (event) => {
     const buttonId = event.target.id; 
     content.replaceChildren();
     if (buttonId === "todo") {
+        HandleSingleProject.resetCurrentProjectName();
+        updatePageName("All Tasks");
         createTodoPage();
     } else if (buttonId === "project") {
         createProjectPage();
