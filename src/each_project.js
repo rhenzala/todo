@@ -1,5 +1,5 @@
 import { myProjects } from "./project";
-import { myTasks, Task, StorageHandler } from "./todo.js";
+import { myTasks, StorageHandler } from "./todo.js";
 import { TodoModal } from "./dom_manipulation.js";
 import EditIcon from "../assets/edit.svg";
 import DeleteIcon from "../assets/delete.svg";
@@ -9,14 +9,13 @@ export let projectTasks = [];
 
 export const HandleSingleProject = (() => {
     let currentProjectName = "";
+
     const getProjectDetails = (index, currentContext) => {
         const project = myProjects[index];
         if (project) {
             currentContext = project.projectName;
             currentProjectName = project.projectName;
-            // call the getAllProjectTasks to get the projectName of the current card
             const projTasks = _getAllProjectTasks(currentContext).length;
-            //console.log("inside _getProjectDetails",currentProjectName);
             return [currentContext, projTasks];
         }
         return null;
@@ -32,10 +31,12 @@ export const HandleSingleProject = (() => {
             SingleProjectCard.displayCard(currentProjectName);
         }
     }
+    const resetCurrentProjectName = () => currentProjectName = "";
     return{
         getProjectDetails,
         getCurrentProject,
-        refreshProjectTasks
+        refreshProjectTasks,
+        resetCurrentProjectName
     }
 })();
 
@@ -99,7 +100,6 @@ export const SingleProjectCard = (() => {
             }
             projectTasks.splice(index, 1);
             StorageHandler.saveTask(); 
-            SingleProjectStorageHandler.saveTask();
             const currentProject = HandleSingleProject.getCurrentProject();
             displayCard(currentProject); 
         });
@@ -115,52 +115,13 @@ export const SingleProjectCard = (() => {
     }
     const displayCard = (projName) => {
         content.replaceChildren();
-        const currentTasks = myTasks.filter(task => task.assignedProject === projName);
-        currentTasks.forEach((task, index) =>{
+        projectTasks = myTasks.filter(task => task.assignedProject === projName);
+        projectTasks.forEach((task, index) =>{
             _createCard(task, index);
         });
     }
     return{
         displayCard,
     }
-})()
-
-export const SingleProjectStorageHandler = (()=>{
-    const saveTask = () =>{
-        try {
-            localStorage.setItem('myTasks', JSON.stringify(projectTasks));
-            console.log('Tasks saved successfully');
-        } catch (error) {
-            console.error('Error saving tasks:', error);
-        }
-    }
-    const loadTask = () => {
-        try {
-            const savedTasks = localStorage.getItem('myTasks');
-            if (savedTasks) {
-                const tasksData = JSON.parse(savedTasks);
-                projectTasks = []; 
-                
-                tasksData.forEach(taskData => {
-                    const task = new Task(
-                        taskData.taskName,
-                        taskData.description,
-                        taskData.dueDate,
-                        taskData.priority,
-                        taskData.assignedProject
-                    );
-                    projectTasks.push(task);
-                });
-                
-                console.log('Tasks loaded successfully');
-            }
-        } catch (error) {
-            console.error('Error loading tasks:', error);
-        }
-    };
-
-    return {
-        saveTask,
-        loadTask,
-    };
 })();
+

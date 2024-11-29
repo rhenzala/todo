@@ -1,4 +1,4 @@
-import { HandleSingleProject, projectTasks, SingleProjectCard, SingleProjectStorageHandler } from "./each_project";
+import { SingleProjectCard } from "./each_project";
 import { TodoModal } from "./dom_manipulation";
 import EditIcon from "../assets/edit.svg";
 import DeleteIcon from "../assets/delete.svg";
@@ -89,9 +89,7 @@ export const TodoCard = (()=>{
     const _handleDeleteBtn = (btn, index) => {
         btn.addEventListener('click', () => {
             myTasks.splice(index, 1);
-            projectTasks.splice(index, 1);
             StorageHandler.saveTask(); 
-            SingleProjectStorageHandler.saveTask();
             displayCard(); 
         });
     }
