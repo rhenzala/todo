@@ -1,6 +1,7 @@
 import { myTasks, Task, TodoCard, StorageHandler } from "./todo.js";
 import { myProjects, Project, ProjectCard, ProjectStorageHandler } from "./project.js";
 import {  HandleSingleProject, SingleProjectStorageHandler, SingleProjectCard } from "./each_project.js";
+import AddIcon from "../assets/plus.svg";
 
 
 const content = document.getElementById('content');
@@ -25,7 +26,7 @@ content.addEventListener('click', _handleCardClick);
 export const createTodoPage = () => {
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
-    updatePageName("To-Dos");
+    updatePageName("All Tasks");
     StorageHandler.loadTask();
     TodoCard.displayCard();
     const addTodoBtn = document.getElementById('addTodoBtn');
@@ -73,18 +74,21 @@ export const handleBtnClick = (event) => {
 
 const CreateAddButton = (()=>{
     const buttonContainer = document.getElementById('buttonContainer');
+    const addIcon = document.createElement('img');
+    addIcon.src = AddIcon;
+    addIcon.alt = "Add";
     const todo = () =>{
         const addTodoBtn = document.createElement('button');
         addTodoBtn.classList.add('add-button');
         addTodoBtn.id = 'addTodoBtn'
-        addTodoBtn.textContent = "Add Task";
+        addTodoBtn.appendChild(addIcon);
         buttonContainer.appendChild(addTodoBtn);
     }
     const project = () =>{
         const addProjectBtn = document.createElement('button');
         addProjectBtn.classList.add('add-button');
         addProjectBtn.id = 'addProjectBtn'
-        addProjectBtn.textContent = "Add Project";
+        addProjectBtn.appendChild(addIcon);
         buttonContainer.appendChild(addProjectBtn);
     }
     const clearBtnContainer = () =>{
@@ -236,7 +240,7 @@ const taskSubmitHandler = () => {
     const dueDate = document.getElementById('dueDate').value;
     const priority = document.getElementById('priority').value;
 
-    let context = pageName === "To-Dos" ? "General": HandleSingleProject.getCurrentProject();
+    let context = pageName === "All Tasks" ? "General": HandleSingleProject.getCurrentProject();
 
     const newTask = new Task(taskName, description, dueDate, priority, context);
     newTask.addTask();

@@ -1,4 +1,6 @@
 import { ProjectModal } from "./dom_manipulation";
+import EditIcon from "../assets/edit.svg";
+import DeleteIcon from "../assets/delete.svg";
 
 export let myProjects = [];
 
@@ -41,14 +43,22 @@ export const ProjectCard = (()=>{
         const projectName = document.createElement('p');
         const projectDesc = document.createElement('p');
         const numOfTasks = document.createElement('p');
+        const cardBtn = document.createElement('div');
         const editBtn = document.createElement('button');
         const deleteBtn = document.createElement('button');
+        const editIcon = document.createElement('img');
+        editIcon.src = EditIcon;
+        editIcon.alt = "Edit";
+        const deleteIcon = document.createElement('img');
+        deleteIcon.src = DeleteIcon;
+        deleteIcon.alt = "Delete";
         projectName.textContent = `${project.projectName}`;
         projectDesc.textContent = `${project.projectDescription}`;
         numOfTasks.textContent = `${project.numberOfTasks} tasks`;
-        editBtn.textContent = "EDIT";
+        cardBtn.classList.add('card-button');
+        editBtn.appendChild(editIcon);
         editBtn.classList.add('edit-button');
-        deleteBtn.textContent = "DELETE";
+        deleteBtn.appendChild(deleteIcon);
         deleteBtn.classList.add('delete-button');
         
         _handleEditBtn(editBtn, project, index);
@@ -56,8 +66,9 @@ export const ProjectCard = (()=>{
         card.appendChild(projectName);
         card.appendChild(projectDesc);
         card.appendChild(numOfTasks);
-        card.appendChild(editBtn);
-        card.appendChild(deleteBtn);
+        cardBtn.appendChild(editBtn);
+        cardBtn.appendChild(deleteBtn);
+        card.appendChild(cardBtn);
         content.appendChild(card);
     }
     const _handleEditBtn = (btn, project, index) => {

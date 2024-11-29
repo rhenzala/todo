@@ -1,5 +1,7 @@
 import { HandleSingleProject, projectTasks, SingleProjectCard, SingleProjectStorageHandler } from "./each_project";
 import { TodoModal } from "./dom_manipulation";
+import EditIcon from "../assets/edit.svg";
+import DeleteIcon from "../assets/delete.svg";
 
 export let myTasks = [];
 const pageName = document.getElementById('pageName').textContent;
@@ -10,12 +12,12 @@ export class Task {
         this.description = descriptionInput;
         this.dueDate = dateInput;
         this.priority = priorityInput;
-        this.assignedProject = assignedProject || "General"; // if the todo is created within To-Dos page, assignedProject is General
+        this.assignedProject = assignedProject || "General"; // if the todo is created within All Tasks page, assignedProject is General
     }
     addTask(){
         myTasks.push(this);
         StorageHandler.saveTask();
-        if (pageName === "To-Dos"){
+        if (pageName === "All Tasks"){
             TodoCard.displayCard();
         } else {
             SingleProjectCard.displayCard(this.assignedProject);
@@ -27,7 +29,7 @@ export class Task {
         this.dueDate = newDueDate;
         this.priority = newPriority;
         StorageHandler.saveTask();
-        if (pageName === "To-Dos"){
+        if (pageName === "All Tasks"){
             TodoCard.displayCard();
         } else {
             SingleProjectCard.displayCard(this.assignedProject);
@@ -45,15 +47,24 @@ export const TodoCard = (()=>{
         const dueDate = document.createElement('p');
         const description = document.createElement('p');
         const assignedProject = document.createElement('p');
+        const cardBtn = document.createElement('div');
         const editBtn = document.createElement('button');
         const deleteBtn = document.createElement('button');
+        const editIcon = document.createElement('img');
+        editIcon.src = EditIcon;
+        editIcon.alt = "Edit";
+        const deleteIcon = document.createElement('img');
+        deleteIcon.src = DeleteIcon;
+        deleteIcon.alt = "Delete";
         taskName.textContent = `${task.taskName}`;
         dueDate.textContent = `${task.dueDate}`;
+        dueDate.classList.add('due-date');
         description.textContent = `${task.description}`;
         assignedProject.textContent = `${task.assignedProject}`;
-        editBtn.textContent = "EDIT";
+        cardBtn.classList.add('card-button');
+        editBtn.appendChild(editIcon);
         editBtn.classList.add('edit-button');
-        deleteBtn.textContent = "DELETE";
+        deleteBtn.appendChild(deleteIcon);
         deleteBtn.classList.add('delete-button');
 
         _handlePriority(task.priority, card);
@@ -63,8 +74,9 @@ export const TodoCard = (()=>{
         card.appendChild(dueDate);
         card.appendChild(description);
         card.appendChild(assignedProject);
-        card.appendChild(editBtn);
-        card.appendChild(deleteBtn);
+        cardBtn.appendChild(editBtn);
+        cardBtn.appendChild(deleteBtn);
+        card.appendChild(cardBtn);
         content.appendChild(card);
     }
     const _handleEditBtn = (btn, task, index) => {
