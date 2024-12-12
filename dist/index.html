@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+<script defer src="main.js"></script></head>
+<body class=" text-black">
+    <header>
+        <div class="logo">
+            <h1 class="text-5xl">Tasky</h1>
+        </div>
+    </header>
+    <main class="flex">
+        <aside class="flex">
+            <nav>
+                <button  class="nav-buttons w-16" id="todo">To-Do</button>
+                <button class="nav-buttons" id="project">Project</button>
+            </nav>
+        </aside>
+        <section id="container">
+            <h1 class="page-name" id="pageName">All Tasks</h1>
+            <div class="button-container" id="buttonContainer"></div>
+            <section id="content"></section>
+        </section>
+    </main>
+    
+    <!-- MODAL FOR ADDING NEW TO-DO -->
+    <dialog id="addTodoModal" class="add-modal">
+        <form id="todoForm" novalidate>
+            <h1>Add To-Do</h1>
+            <label for="taskName"> Name of Task:
+                <input type="text" id="taskName" minlength="1" required>
+            </label>
+            <label for="description"> Description:
+                <input type="text" id="description" minlength="1" required>
+            </label>
+            <label for="dueDate"> Due Date:
+                <input type="date" id="dueDate" required>
+            </label>
+            <label for="priority"> Priority
+                <select id="priority" required>
+                    <option value="high" selected>High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </label>
+            <div>
+                <button id="cancelTask" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="submit" id="confirmTask" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
+    <!-- MODAL FOR ADDING NEW PROJECT -->
+    <dialog id="addProjectModal" class="add-modal">
+        <form id="projectForm" novalidate>
+            <h1>Add Project</h1>
+            <label for="projectName"> Project Name:
+                <input type="text" id="projectName" minlength="1" required>
+            </label>
+            <label for="projectDesc"> Description:
+                <input type="text" id="projectDesc" minlength="1" required>
+            </label>
+            <div>
+                <button id="cancelProject" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="submit" id="confirmProject" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
+    <!-- MODAL FOR EDITING TODO CARD -->
+    <dialog id="editTodoModal" class="add-modal">
+        <form id="editTodoForm" novalidate>
+            <h1>Edit To-Do</h1>
+            <label for="editTaskName"> Name of Task:
+                <input type="text" id="editTaskName" minlength="1" required>
+            </label>
+            <label for="editTaskDesc"> Description:
+                <input type="text" id="editTaskDesc" minlength="1" required>
+            </label>
+            <label for="editDueDate"> Due Date:
+                <input type="date" id="editDueDate" required>
+            </label>
+            <label for="editPriority"> Priority
+                <select id="editPriority" required>
+                    <option value="high" selected>High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </label>
+            <div>
+                <button id="cancelTask" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="submit" id="confirmTaskEdit" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
+    <!-- MODAL FOR EDITING A PROJECT -->
+    <dialog id="editProjectModal" class="add-modal">
+        <form id="editProjectForm" novalidate>
+            <h1>Edit Project</h1>
+            <label for="editProjectName"> Project Name:
+                <input type="text" id="editProjectName" minlength="1" required>
+            </label>
+            <label for="editProjectDesc"> Description:
+                <input type="text" id="editProjectDesc" minlength="1" required>
+            </label>
+            <div>
+                <button id="cancelProject" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="submit" id="confirmProjectEdit" value="default">Confirm</button>
+            </div>
+        </form>
+    </dialog>
+</body>
+</html>
