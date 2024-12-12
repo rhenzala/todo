@@ -78,6 +78,7 @@ const CreateAddButton = (()=>{
     const addIcon = document.createElement('img');
     addIcon.src = AddIcon;
     addIcon.alt = "Add";
+    addIcon.classList.add('hover:scale-105');
     const todo = () =>{
         const addTodoBtn = document.createElement('button');
         addTodoBtn.classList.add('add-button');
