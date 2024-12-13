@@ -31,11 +31,11 @@
     <dialog id="addTodoModal" class="add-modal hidden bg-white top-[10%] rounded-md shadow-md mx-auto p-8 grid">
         <form id="todoForm" novalidate class="grid gap-4 justify-self-center">
             <h1 class="text-2xl font-bold justify-self-center">Add To-Do</h1>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="taskName"> Name of Task: </label>
                 <input type="text" id="taskName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="description"> Description: </label>
                 <input type="text" id="description" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p> 
@@ -43,8 +43,8 @@
                 <label for="dueDate"> Due Date: </label>
                 <input type="date" id="dueDate" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
-            <p class="flex flex-col gap-1 mb-4">
-                <label for="priority"> Priority </label>
+            <p class="flex flex-col gap-1">
+                <label for="priority"> Priority: </label>
                 <select id="priority" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
                     <option value="high" selected>High</option>
                     <option value="medium">Medium</option>
@@ -61,11 +61,11 @@
     <dialog id="addProjectModal" class="add-modal hidden bg-white rounded-md shadow-md mx-auto p-8 grid">
         <form id="projectForm" novalidate class="grid gap-4 justify-self-center">
             <h1 class="text-2xl font-bold justify-self-center">Add Project</h1>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="projectName"> Project Name: </label>
                 <input type="text" id="projectName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="projectDesc"> Description: </label>
                 <input type="text" id="projectDesc" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
@@ -79,19 +79,19 @@
     <dialog id="editTodoModal" class="add-modal hidden bg-white rounded-md shadow-md mx-auto p-8 grid">
         <form id="editTodoForm" novalidate class="grid gap-4 justify-self-center">
             <h1 class="text-2xl font-bold justify-self-center">Edit To-Do</h1>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="editTaskName"> Name of Task: </label>
                 <input type="text" id="editTaskName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="editTaskDesc"> Description: </label>
                 <input type="text" id="editTaskDesc" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>   
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="editDueDate"> Due Date: </label>
                 <input type="date" id="editDueDate" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="editPriority"> Priority: </label>
                 <select id="editPriority" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
                     <option value="high" selected>High</option>
@@ -109,11 +109,11 @@
     <dialog id="editProjectModal" class="add-modal hidden bg-white rounded-md shadow-md mx-auto p-8 grid">
         <form id="editProjectForm" novalidate class="grid gap-4 justify-self-center">
             <h1 class="text-2xl font-bold justify-self-center">Edit Project</h1>
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="editProjectName"> Project Name: </label>
                 <input type="text" id="editProjectName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p> 
-            <p class="flex flex-col gap-1 mb-4">
+            <p class="flex flex-col gap-1">
                 <label for="editProjectDesc"> Description: </label>
                 <input type="text" id="editProjectDesc" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
             </p>
