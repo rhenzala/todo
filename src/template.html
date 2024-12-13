@@ -5,99 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do App</title>
 </head>
-<body>
-    <header>
-        <nav>
-            <button  class="nav-buttons" id="todo">To-Do</button>
-            <button class="nav-buttons" id="project">Project</button>
-        </nav>
+<body class="min-h-screen flex flex-col bg-white text-black ">
+    <header class="h-24 p-4 border-b-2 border-b-black border-b-solid flex align-middle">
+        <div class="logo">
+            <h1 class="text-5xl font-extrabold">Tasky</h1>
+        </div>
     </header>
-    <main id="container">
-        <div class="page-name" id="pageName">All Tasks</div>
-        <div class="button-container" id="buttonContainer"></div>
-        <div id="content"></div>
+    <main class="flex-1 flex custom-sm:flex custom-sm:flex-col-reverse custom-sm:w-full">
+        <aside class="p-4 w-1/6  border-r-2  border-r-black border-r-solid relative custom-sm:w-full custom-sm:fixed custom-sm:bottom-0 custom-sm:border-t-2 custom-sm:border-t-black custom-sm:border-t-solid custom-sm:border-r-0 custom-sm:bg-white custom-sm:z-50 ">
+            <nav class="flex flex-col gap-3 custom-sm:flex custom-sm:flex-row custom-sm:align-middle custom-sm:justify-center custom-sm:gap-5">
+                <button  class="nav-buttons p-2 text-2xl font-medium cursor-pointer hover:bg-gray focus-within:bg-gray rounded-md" id="todo">To-Do</button>
+                <button class="nav-buttons p-2 text-2xl font-medium cursor-pointer hover:bg-gray focus-within:bg-gray rounded-md" id="project">Project</button>
+            </nav>
+        </aside>
+        <section class="p-4 w-5/6 mx-auto custom-sm:w-full" id="container">
+            <div class="flex justify-around">
+                <h1 class="page-name text-4xl font-semibold" id="pageName">All Tasks</h1>
+                <div class="button-container" id="buttonContainer"></div>
+            </div> 
+            <section class="m-6 grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-8" id="content"></section>
+        </section>
     </main>
+    
     <!-- MODAL FOR ADDING NEW TO-DO -->
-    <dialog id="addTodoModal" class="add-modal">
-        <form id="todoForm" novalidate>
-            <h1>Add To-Do</h1>
-            <label for="taskName"> Name of Task:
-                <input type="text" id="taskName" minlength="1" required>
-            </label>
-            <label for="description"> Description:
-                <input type="text" id="description" minlength="1" required>
-            </label>
-            <label for="dueDate"> Due Date:
-                <input type="date" id="dueDate" required>
-            </label>
-            <label for="priority"> Priority
-                <select id="priority" required>
+    <dialog id="addTodoModal" class="add-modal hidden bg-white top-[10%] rounded-md shadow-md mx-auto p-8 grid">
+        <form id="todoForm" novalidate class="grid gap-4 justify-self-center">
+            <h1 class="text-2xl font-bold justify-self-center">Add To-Do</h1>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="taskName"> Name of Task: </label>
+                <input type="text" id="taskName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="description"> Description: </label>
+                <input type="text" id="description" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p> 
+            <p class="flex flex-col gap-1 nb-4">
+                <label for="dueDate"> Due Date: </label>
+                <input type="date" id="dueDate" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="priority"> Priority </label>
+                <select id="priority" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
                     <option value="high" selected>High</option>
                     <option value="medium">Medium</option>
                     <option value="low">Low</option>
-                </select>
-            </label>
-            <div>
-                <button id="cancelTask" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
-                <button type="submit" id="confirmTask" value="default">Confirm</button>
+                </select>  
+            </p>
+            <div class="justify-self-end flex gap-4">
+                <button id="cancelTask" formmethod="dialog" value="cancel" class="cancel-button bg-red text-white font-semibold p-2 rounded-md" >Cancel</button>
+                <button type="submit" id="confirmTask" value="default" class="bg-green text-white font-semibold p-2 rounded-md">Confirm</button>
             </div>
         </form>
     </dialog>
     <!-- MODAL FOR ADDING NEW PROJECT -->
-    <dialog id="addProjectModal" class="add-modal">
-        <form id="projectForm" novalidate>
-            <h1>Add Project</h1>
-            <label for="projectName"> Project Name:
-                <input type="text" id="projectName" minlength="1" required>
-            </label>
-            <label for="projectDesc"> Description:
-                <input type="text" id="projectDesc" minlength="1" required>
-            </label>
-            <div>
-                <button id="cancelProject" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
-                <button type="submit" id="confirmProject" value="default">Confirm</button>
+    <dialog id="addProjectModal" class="add-modal hidden bg-white rounded-md shadow-md mx-auto p-8 grid">
+        <form id="projectForm" novalidate class="grid gap-4 justify-self-center">
+            <h1 class="text-2xl font-bold justify-self-center">Add Project</h1>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="projectName"> Project Name: </label>
+                <input type="text" id="projectName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="projectDesc"> Description: </label>
+                <input type="text" id="projectDesc" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <div class="justify-self-end flex gap-4">
+                <button id="cancelProject" formmethod="dialog" value="cancel" class="cancel-button bg-red text-white font-semibold p-2 rounded-md">Cancel</button>
+                <button type="submit" id="confirmProject" value="default" class="bg-green text-white font-semibold p-2 rounded-md">Confirm</button>
             </div>
         </form>
     </dialog>
     <!-- MODAL FOR EDITING TODO CARD -->
-    <dialog id="editTodoModal" class="add-modal">
-        <form id="editTodoForm" novalidate>
-            <h1>Edit To-Do</h1>
-            <label for="editTaskName"> Name of Task:
-                <input type="text" id="editTaskName" minlength="1" required>
-            </label>
-            <label for="editTaskDesc"> Description:
-                <input type="text" id="editTaskDesc" minlength="1" required>
-            </label>
-            <label for="editDueDate"> Due Date:
-                <input type="date" id="editDueDate" required>
-            </label>
-            <label for="editPriority"> Priority
-                <select id="editPriority" required>
+    <dialog id="editTodoModal" class="add-modal hidden bg-white rounded-md shadow-md mx-auto p-8 grid">
+        <form id="editTodoForm" novalidate class="grid gap-4 justify-self-center">
+            <h1 class="text-2xl font-bold justify-self-center">Edit To-Do</h1>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="editTaskName"> Name of Task: </label>
+                <input type="text" id="editTaskName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="editTaskDesc"> Description: </label>
+                <input type="text" id="editTaskDesc" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>   
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="editDueDate"> Due Date: </label>
+                <input type="date" id="editDueDate" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="editPriority"> Priority: </label>
+                <select id="editPriority" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
                     <option value="high" selected>High</option>
                     <option value="medium">Medium</option>
                     <option value="low">Low</option>
                 </select>
-            </label>
-            <div>
-                <button id="cancelTask" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
-                <button type="submit" id="confirmTaskEdit" value="default">Confirm</button>
+            </p>       
+            <div class="justify-self-end flex gap-4">
+                <button id="cancelTaskEdit" formmethod="dialog" value="cancel" class="cancel-button bg-red text-white font-semibold p-2 rounded-md">Cancel</button>
+                <button type="submit" id="confirmTaskEdit" value="default" class="bg-green text-white font-semibold p-2 rounded-md">Confirm</button>
             </div>
         </form>
     </dialog>
     <!-- MODAL FOR EDITING A PROJECT -->
-    <dialog id="editProjectModal" class="add-modal">
-        <form id="editProjectForm" novalidate>
-            <h1>Edit Project</h1>
-            <label for="editProjectName"> Project Name:
-                <input type="text" id="editProjectName" minlength="1" required>
-            </label>
-            <label for="editProjectDesc"> Description:
-                <input type="text" id="editProjectDesc" minlength="1" required>
-            </label>
-            <div>
-                <button id="cancelProject" class="cancel-button" formmethod="dialog" value="cancel">Cancel</button>
-                <button type="submit" id="confirmProjectEdit" value="default">Confirm</button>
+    <dialog id="editProjectModal" class="add-modal hidden bg-white rounded-md shadow-md mx-auto p-8 grid">
+        <form id="editProjectForm" novalidate class="grid gap-4 justify-self-center">
+            <h1 class="text-2xl font-bold justify-self-center">Edit Project</h1>
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="editProjectName"> Project Name: </label>
+                <input type="text" id="editProjectName" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p> 
+            <p class="flex flex-col gap-1 mb-4">
+                <label for="editProjectDesc"> Description: </label>
+                <input type="text" id="editProjectDesc" minlength="1" class="w-64 p-1.5 text-sm border-solid border-black border rounded-md" required>
+            </p>
+            <div class="justify-self-end flex gap-4">
+                <button id="cancelProjectEdit" formmethod="dialog" value="cancel" class="cancel-button bg-red text-white font-semibold p-2 rounded-md">Cancel</button>
+                <button type="submit" id="confirmProjectEdit" value="default" class="bg-green text-white font-semibold p-2 rounded-md">Confirm</button>
             </div>
         </form>
     </dialog>
