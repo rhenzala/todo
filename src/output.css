@@ -907,6 +907,14 @@ video {
     z-index: 50;
   }
 
+  .custom-sm\:mb-4 {
+    margin-bottom: 1rem;
+  }
+
+  .custom-sm\:mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
   .custom-sm\:flex {
     display: flex;
   }
@@ -947,6 +955,18 @@ video {
   .custom-sm\:bg-white {
     --tw-bg-opacity: 1;
     background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+  }
+
+  .custom-sm\:pb-\[4rem\] {
+    padding-bottom: 4rem;
+  }
+
+  .custom-sm\:pb-\[5rem\] {
+    padding-bottom: 5rem;
+  }
+
+  .custom-sm\:pb-3 {
+    padding-bottom: 0.75rem;
   }
 
   .custom-sm\:align-middle {
