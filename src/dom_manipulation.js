@@ -1,6 +1,7 @@
-import { myTasks, Task, TodoCard, StorageHandler } from "./todo.js";
-import { myProjects, Project, ProjectCard, ProjectStorageHandler } from "./project.js";
-import { HandleSingleProject, SingleProjectCard } from "./each_project.js";
+import { myTasks, Task, HandleSingleProject, projectTasks } from "./todo.js";
+import { myProjects, Project } from "./project.js";
+import displayCard from "./handle_card.js";
+import StorageHandler from "./storage.js";
 import AddIcon from "../assets/plus.svg";
 
 
@@ -11,8 +12,8 @@ let numOfTasks = 0;
 
 const _handleCardClick = (e) => {
     const cardElement = e.target.closest('.project-card');
-    if (cardElement && !e.target.classList.contains('edit-button') && 
-        !e.target.classList.contains('delete-button')) {
+    if (cardElement && !e.target.closest('.edit-button') && 
+        !e.target.closest('.delete-button')) {
         const projectIndex = parseInt(e.target.closest('.project-card').getAttribute('data-id'));
         [currentContext, numOfTasks] = HandleSingleProject.getProjectDetails(projectIndex, currentContext);
         myProjects[projectIndex].setTaskCount(numOfTasks);
@@ -21,13 +22,64 @@ const _handleCardClick = (e) => {
         updatePageName(currentContext);
     }
 }
+
+const _handleDeleteClick = (e) => {
+    const btnElement = e.target.closest('.delete-button');
+    const currentProject = HandleSingleProject.getCurrentProject();
+    const index = parseInt(e.target.closest('.card').getAttribute('data-id'));
+    if (btnElement && pageName.textContent === 'All Tasks') {
+        myTasks.splice(index, 1);
+        StorageHandler.saveTask(myTasks); 
+        displayCard(myTasks, true, false, null, null);
+    } else if (btnElement && pageName.textContent === currentProject) {
+        const taskToDelete = projectTasks[index];
+        const mainTaskIndex = myTasks.findIndex(task =>
+            task.taskName === taskToDelete.taskName &&
+            task.assignedProject === taskToDelete.assignedProject
+        );
+        if (mainTaskIndex !== -1) {
+            myTasks.splice(mainTaskIndex, 1)
+        }
+        projectTasks.splice(index, 1);
+        StorageHandler.saveTask(myTasks); 
+        const currentProject = HandleSingleProject.getCurrentProject();
+        displayCard(myTasks, true, true, projectTasks, currentProject); 
+    } else if (btnElement && pageName.textContent === 'Projects') {
+        if (Array.isArray(myProjects)) {
+            myProjects.splice(index, 1);
+            StorageHandler.saveProject(myProjects); 
+            displayCard(myProjects, false, false, null, null);
+        } else {
+            console.error('myProjects is not an array:', myProjects);
+        }
+    }
+}
+
+const _handleEditClick = (e) => {
+    const btnElement = e.target.closest('.edit-button');
+    const index = parseInt(e.target.closest('.card').getAttribute('data-id'));
+    if (btnElement && pageName.textContent !== 'Projects') {
+        const taskToEdit = myTasks[index];
+        TodoModal.showEdit(taskToEdit);
+        const editForm = document.getElementById('editTodoForm');
+        editForm.setAttribute('data-task-index', index);
+    } else if (btnElement && pageName.textContent === 'Projects') {
+        const projectToEdit = myProjects[index];
+        ProjectModal.showEdit(projectToEdit);
+        const editForm = document.getElementById('editProjectForm');
+        editForm.setAttribute('data-project-index', index);
+    }
+}
+
 content.addEventListener('click', _handleCardClick);
+content.addEventListener('click', _handleDeleteClick);
+content.addEventListener('click', _handleEditClick);
 
 export const createTodoPage = () => {
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
-    StorageHandler.loadTask();
-    TodoCard.displayCard();
+    StorageHandler.loadTask(myTasks, Task);
+    displayCard(myTasks, true, false, null, null);
     const addTodoBtn = document.getElementById('addTodoBtn');
     addTodoBtn.addEventListener('click', ()=>{
         TodoModal.showTodoModal();
@@ -38,8 +90,8 @@ const createProjectPage = () =>{
     CreateAddButton.clearBtnContainer();
     CreateAddButton.project();
     updatePageName("Projects");
-    ProjectStorageHandler.loadProject();
-    ProjectCard.displayCard();
+    StorageHandler.loadProject(myProjects, Project);
+    displayCard(myProjects, false, false, null, null);
     const addProjBtn = document.getElementById('addProjectBtn');
     addProjBtn.addEventListener('click', ()=>{
         ProjectModal.showProjectModal();
@@ -49,8 +101,8 @@ export const createSingleProjectPage = (projName) =>{
     CreateAddButton.clearBtnContainer();
     CreateAddButton.todo();
     updatePageName(projName);
-    StorageHandler.loadTask();
-    SingleProjectCard.displayCard(projName);
+    StorageHandler.loadTask(projectTasks, Task);
+    displayCard(myTasks, true, true, projectTasks, projName);
     const addTodoBtn = document.getElementById('addTodoBtn');
     addTodoBtn.addEventListener('click', ()=>{
         TodoModal.showTodoModal();
@@ -81,14 +133,12 @@ const CreateAddButton = (()=>{
     addIcon.classList.add('hover:scale-105');
     const todo = () =>{
         const addTodoBtn = document.createElement('button');
-        addTodoBtn.classList.add('add-button');
         addTodoBtn.id = 'addTodoBtn'
         addTodoBtn.appendChild(addIcon);
         buttonContainer.appendChild(addTodoBtn);
     }
     const project = () =>{
         const addProjectBtn = document.createElement('button');
-        addProjectBtn.classList.add('add-button');
         addProjectBtn.id = 'addProjectBtn'
         addProjectBtn.appendChild(addIcon);
         buttonContainer.appendChild(addProjectBtn);
@@ -106,10 +156,13 @@ const CreateAddButton = (()=>{
 export const TodoModal = (()=>{
     const addTodoModal = document.getElementById('addTodoModal');
     const editTodoModal = document.getElementById('editTodoModal');
+
     const showTodoModal = () =>{
+        addTodoModal.classList.remove('hidden');
         addTodoModal.showModal();
     }
     const closeTodoModal = () =>{
+        addTodoModal.classList.add('hidden');
         addTodoModal.close();
     }
     const showEdit = (task) => {
@@ -121,9 +174,11 @@ export const TodoModal = (()=>{
         editTaskDescInput.value = task.description;
         editDueDate.value = task.dueDate;
         editPriority.value = task.priority;
+        editTodoModal.classList.remove('hidden');
         editTodoModal.showModal();
     }
     const closeEdit = () => {
+        editTodoModal.classList.add('hidden');
         editTodoModal.close();
     }
     return{
@@ -137,9 +192,11 @@ export const ProjectModal = (()=>{
     const addProjectModal = document.getElementById('addProjectModal');
     const editProjectModal = document.getElementById('editProjectModal');
     const showProjectModal = () => {
+        addProjectModal.classList.remove('hidden');
         addProjectModal.showModal();
     }
     const closeProjectModal = () => {
+        addProjectModal.classList.add('hidden');
         addProjectModal.close();
     }
     const showEdit = (project) => {
@@ -147,9 +204,11 @@ export const ProjectModal = (()=>{
         const editProjDescInput = document.getElementById('editProjectDesc');
         editProjNameInput.value = project.projectName;
         editProjDescInput.value = project.projectDescription;
+        editProjectModal.classList.remove('hidden');
         editProjectModal.showModal();
     }
     const closeEdit = () => {
+        editProjectModal.classList.add('hidden');
         editProjectModal.close();
     }
     return{
@@ -185,8 +244,8 @@ const FormHandler = (() => {
                     input.classList.add('invalid');
                     let errorMsg = input.parentElement.querySelector('.error-message');
                     if (!errorMsg) {
-                        errorMsg = document.createElement('span');
-                        errorMsg.className = 'error-message';
+                        errorMsg = document.createElement('p');
+                        errorMsg.classList.add('error-message');
                         input.parentElement.appendChild(errorMsg);
                     }
                     errorMsg.textContent = `Please enter ${input.id}`;
@@ -204,9 +263,11 @@ const FormHandler = (() => {
         });
     }
     const _setupCancelFormListener = (form, cancelBtn, closeModalHandler) => {
-        cancelBtn.addEventListener('click', () => {
-            _clearForm(form);
+        cancelBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             closeModalHandler();
+            _clearForm(form);
         });
     };
 
@@ -249,7 +310,7 @@ const taskSubmitHandler = () => {
 
     TodoModal.closeTodoModal();
     if (context === "General"){
-        TodoCard.displayCard();
+        displayCard(myTasks, true, false, null, null);
     } else {
         HandleSingleProject.refreshProjectTasks();
     }
@@ -262,7 +323,7 @@ const projectSubmitHandler = () => {
     newProject.addProject();
 
     ProjectModal.closeProjectModal();
-    ProjectCard.displayCard();
+    displayCard(myProjects, false, false, null, null);
 };
 const editProjectSubmitHandler = () => {
     const projectIndex = parseInt(document.getElementById('editProjectForm').getAttribute('data-project-index'));
@@ -271,7 +332,7 @@ const editProjectSubmitHandler = () => {
 
     myProjects[projectIndex].updateDetails(newName, newDesc);
     ProjectModal.closeEdit();
-    ProjectCard.displayCard();
+    displayCard(myProjects, false, false, null, null);
 }
 const editTaskSubmitHandler = () => {
     const taskIndex = parseInt(document.getElementById('editTodoForm').getAttribute('data-task-index'));
@@ -282,17 +343,17 @@ const editTaskSubmitHandler = () => {
 
     myTasks[taskIndex].updateDetails(newName, newDesc, newDueDate, newPriority);
     TodoModal.closeEdit();
-    TodoCard.displayCard();
+    displayCard(myTasks, true, false, null, null);
 }
 FormHandler.addForm({
     formId: 'editTodoForm',
-    cancelBtnId: 'cancelTask',
+    cancelBtnId: 'cancelTaskEdit',
     submitHandler: editTaskSubmitHandler,
     closeModalHandler: TodoModal.closeEdit
 });
 FormHandler.addForm({
     formId: 'editProjectForm',
-    cancelBtnId: 'cancelTask',
+    cancelBtnId: 'cancelProjectEdit',
     submitHandler: editProjectSubmitHandler,
     closeModalHandler: ProjectModal.closeEdit
 });
@@ -311,3 +372,4 @@ FormHandler.addForm({
 });
 
 FormHandler.init();
+
