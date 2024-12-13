@@ -1,9 +1,33 @@
-import { TodoModal, ProjectModal } from "./dom_manipulation";
 import EditIcon from "../assets/edit.svg";
 import DeleteIcon from "../assets/delete.svg";
+import { isToday, isThisWeek, isSameMonth, isSameYear, format, startOfWeek, addWeeks } from 'date-fns';
 
 
 const content = document.getElementById('content');
+
+function formatDate(inputDate) {
+    const today = new Date();
+    const nextWeekStart = addWeeks(startOfWeek(today, { weekStartsOn: 0 }), 1);
+    const nextWeekEnd = addWeeks(startOfWeek(today, { weekStartsOn: 0 }), 2);
+
+    if (isToday(inputDate)) {
+        return 'Today';
+    }
+    if (isThisWeek(inputDate, { weekStartsOn: 0 })) { 
+        return format(inputDate, 'EEEE'); 
+    }
+    if (inputDate >= nextWeekStart && inputDate < nextWeekEnd) {
+        return 'Next Week';
+    }
+    if (isSameMonth(inputDate, new Date(today.getFullYear(), today.getMonth() + 1))) {
+        return 'Next Month';
+    }
+    if (isSameYear(inputDate, new Date(today.getFullYear() + 1, 0))) {
+        return 'Next Year';
+    }
+    return format(inputDate, 'MMMM d, yyyy'); 
+}
+
 const _createCard = (item, index, isTask) => {
     const card = document.createElement('div');
     card.classList.add('card', 'rounded-lg', 'shadow-lg', 'bg-gray', 'p-6', 'grid', 'gap-2.5');
@@ -30,8 +54,6 @@ const _createCard = (item, index, isTask) => {
     editBtn.appendChild(editIcon);
     deleteBtn.appendChild(deleteIcon);
     
-    _handleEditBtn(editBtn, item, index, isTask)
-    
     cardBtn.appendChild(editBtn);
     cardBtn.appendChild(deleteBtn);
     card.appendChild(cardBtn);
@@ -46,7 +68,7 @@ const _appendTaskDetails = (card, task) => {
     dueDate.classList.add('text-sm', 'font-medium')
     assignedProject.classList.add('font-semibold');
     taskName.textContent = `${task.taskName}`;
-    dueDate.textContent = `Due: ${task.dueDate}`;
+    dueDate.textContent = `Due: ${formatDate(task.dueDate)}`;
     description.textContent = `${task.description}`;
     assignedProject.textContent = `${task.assignedProject}`;
     card.appendChild(taskName);
@@ -68,16 +90,6 @@ const _appendProjectDetails = (card, project) => {
     card.appendChild(projectName);
     card.appendChild(projectDesc);
     card.appendChild(numOfTasks);
-}
-const _editTask = (task, index) => {
-    TodoModal.showEdit(task);
-    const editForm = document.getElementById('editTodoForm');
-    editForm.setAttribute('data-task-index', index);
-}
-const _editProject = (project, index) => {
-    ProjectModal.showEdit(project);
-    const editForm = document.getElementById('editProjectForm');
-    editForm.setAttribute('data-project-index', index);
 }
 const _handleEditBtn = (btn, item, index, isTask) => {
     if (isTask) {
@@ -114,5 +126,6 @@ const displayCard = (myArray, isTask, isWithinProject, projectTasks, projName) =
     }
     
 }
+
 
 export default displayCard 
