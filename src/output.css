@@ -927,10 +927,6 @@ video {
     flex-direction: row;
   }
 
-  .custom-sm\:flex-col-reverse {
-    flex-direction: column-reverse;
-  }
-
   .custom-sm\:justify-center {
     justify-content: center;
   }
