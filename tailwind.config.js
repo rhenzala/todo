@@ -13,10 +13,11 @@ module.exports = {
       'amber': '#f59e0b',
       'green': '#22c55e',
     },
+
     extend: {
-      gridTemplateColumns: {
-        'autofill': 'repeat(auto-fill, minmax(250px, 1fr))',
-      }
+      screens: {
+        'custom-sm': { max: '762px' }, 
+      },
     },  
   },
   plugins: [],
