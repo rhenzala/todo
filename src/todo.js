@@ -13,7 +13,7 @@ class Task {
         this.description = descriptionInput;
         this.dueDate = dateInput;
         this.priority = priorityInput;
-        this.assignedProject = assignedProject || "General"; // if the todo is created within All Tasks page, assignedProject is General
+        this.assignedProject = assignedProject || "General"; 
     }
     addTask(){
         myTasks.push(this);
