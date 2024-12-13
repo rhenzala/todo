@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do App</title>
 <script defer src="main.js"></script></head>
-<body>
+<body class=" text-black">
     <header>
-        <nav>
-            <button  class="nav-buttons" id="todo">To-Do</button>
-            <button class="nav-buttons" id="project">Project</button>
-        </nav>
+        <div class="logo">
+            <h1 class="text-5xl">Tasky</h1>
+        </div>
     </header>
-    <main id="container">
-        <div class="page-name" id="pageName">All Tasks</div>
-        <div class="button-container" id="buttonContainer"></div>
-        <div id="content"></div>
+    <main class="flex">
+        <aside class="flex">
+            <nav>
+                <button  class="nav-buttons w-16" id="todo">To-Do</button>
+                <button class="nav-buttons" id="project">Project</button>
+            </nav>
+        </aside>
+        <section id="container">
+            <h1 class="page-name" id="pageName">All Tasks</h1>
+            <div class="button-container" id="buttonContainer"></div>
+            <section id="content"></section>
+        </section>
     </main>
+    
     <!-- MODAL FOR ADDING NEW TO-DO -->
     <dialog id="addTodoModal" class="add-modal">
         <form id="todoForm" novalidate>
