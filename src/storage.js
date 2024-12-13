@@ -12,7 +12,7 @@ const StorageHandler = (()=>{
             const savedTasks = localStorage.getItem('myTasks');
             if (savedTasks) {
                 const tasksData = JSON.parse(savedTasks);
-                myTasks = []; 
+                myTasks.length = 0; 
                 
                 tasksData.forEach(taskData => {
                     const task = new Task(
@@ -44,7 +44,7 @@ const StorageHandler = (()=>{
             const savedProjects = localStorage.getItem('myProjects');
             if (savedProjects) {
                 const projectsData = JSON.parse(savedProjects);
-                myProjects = []; 
+                myProjects.length = 0; 
                 projectsData.forEach(projectData => {
                     const proj = new Project(
                         projectData.projectName,
